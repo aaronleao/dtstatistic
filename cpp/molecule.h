@@ -1,6 +1,7 @@
 #include <openbabel/obconversion.h>
 #include <vector>
-#include <boost/algorithm/string.hpp>
+//#include <boost/algorithm/string.hpp>
+#include <string>
 
 // void print( std::vector <std::string> v )
 // {
@@ -9,10 +10,12 @@
 //   std::cout << std::endl;
 // }
 
+class Molecule()
+
 int mol2_converter(std::vector<std::string>  *pdb_files)
 {
 
-	//OpenBabel::OBConversion conv(in, out);
+	OpenBabel::OBConversion conv("pdb", "mol2");
 	
 	std::string aux;
 	for (std::vector<std::string>::iterator it = pdb_files->begin(); it != pdb_files->end(); ++it)
@@ -20,6 +23,6 @@ int mol2_converter(std::vector<std::string>  *pdb_files)
 		aux=*it;
 		std::string mol2_name = aux.substr(0, aux.find(".pdb"));
 		mol2_name=mol2_name+".mol2";
-		std::cout<<"NOME: "<<mol2_name<<std::endl;
+//		std::cout<<"NOME: "<<mol2_name<<std::endl;
 	}
 }

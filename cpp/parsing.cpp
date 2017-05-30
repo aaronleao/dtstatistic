@@ -1,42 +1,46 @@
 #include "parsing.h"
 
-void parse(int argc,char * argv[],std::string *label_name, std::string *output_name, int *number_of_ligands, bool *analysis_by_total_energy, bool *analysis_by_internal_energy, bool *print_help)
+void parse(int argc , char * argv[] , std::string *label_name , std::string *path_name , std::string *output_name , int *number_of_ligands, bool *analysis_by_total_energy, bool *analysis_by_internal_energy, bool *print_help)
 {
 	
 	std::string aux;
-	for(int i=0;i<argc;i++)
+	for(int i=1;i<argc;i++)
 	{
 		aux=argv[i];
-		if(! strcmp(argv[i],"-h")|| argc==1)
+		//std::cout<<"PARSING: aux= "<<aux<<std::endl;
+
+		if(! aux.compare("-h") || argc==1)
 		{
 			*print_help=true;
 		}
 		if(i+1<argc)
 		{
 
-			if(! strcmp(argv[i],"-l") )
+			if(! aux.compare("-d") )
 			{
-				*label_name=argv[i+1];
-				//i++;
-			}
-		
-			if(! strcmp(argv[i],"-o"))
-			{
-				*output_name=argv[i+1];
-				//i++;
-			}
-			if(! strcmp(argv[i],"-n") )
-			{
-				*number_of_ligands=atoi(argv[i+1]);
-				//i++;
+				*path_name=argv[i+1];
 			}
 
-			if(! strcmp(argv[i],"-t"))
+			if(! aux.compare("-l") )
+			{
+				*label_name=argv[i+1];
+			}
+		
+			if(! aux.compare("-o"))
+			{
+				*output_name=argv[i+1];
+			}
+			if(! aux.compare("-n") )
+			{
+				*number_of_ligands=atoi(argv[i+1]);
+			}
+
+			if(! aux.compare("-t"))
 			{
 				*analysis_by_total_energy=true;
 				*analysis_by_internal_energy=false;
 			}
-			if(! strcmp(argv[i],"-i"))
+			if(! aux.compare("-i"))
 			{
 				*analysis_by_total_energy=false;
 				*analysis_by_internal_energy=true;

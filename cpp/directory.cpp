@@ -1,11 +1,11 @@
 #include "directory.h"
 
-DIR * open_directory(const char * path_name)
+DIR * check_directory(std::string path_name)
 {
-	DIR *dir=opendir(path_name);
+	DIR *dir=opendir(path_name.c_str());
 	if(!dir)
     {
-        std::cerr<<"[DTSTATISTIC] Cannot access directory."<<std::endl;
+        std::cerr<<"[DTSTATISTIC] Cannot access directory "<<path_name<<"."<<std::endl;
         exit(1);
     }
     else
@@ -15,26 +15,73 @@ DIR * open_directory(const char * path_name)
 }
 
 
-void list_directory(DIR * dir, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files)
+void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files)
 {
     struct dirent *dirent;
-    std::string aux;
+    std::string file_name;
+
     while (dirent = readdir(dir))
     {
-        aux=dirent->d_name;
-        if( aux.compare(".") && aux.compare("..") && aux.find("_run_")!=std::string::npos) //Not selecting "."" and ".." and not .log nor .pdb
+        file_name=dirent->d_name;
+        if(!label_name.empty() )
         {
-            if(aux.find(".log")!=std::string::npos)
-            {
-                log_files->push_back(aux);
-            }
-            if(aux.find(".pdb")!=std::string::npos)
-            {
-                pdb_files->push_back(aux);
+
+//            std::cout<<"-l flag is set"<<std::endl;
+        
+            /*
+                Excluding "." and ".."  and taking exact match of label_name
+            */
+            std::size_t count=label_name.size();//label size
+            std::size_t pos=0;                  //Search in the begining of the string
+            std::size_t found=file_name.find(label_name.c_str(),pos,count);//Search a substring with size exact size of label
+
+            if( found!=std::string::npos)
+            {   
+                std::string proximo=file_name.substr(count,5); //After found, check is the 5-following characters is "_run_"
+                if(proximo == "_run_" && file_name.compare(".") && file_name.compare("..")) 
+                {
+                    if(file_name.find(".log")!=std::string::npos)
+                    {
+                        log_files->push_back(file_name);
+                    }
+                    if(file_name.find(".pdb")!=std::string::npos)
+                    {
+                        pdb_files->push_back(file_name);
+                    }
+
+                }
             }
         }
+        else
+        {
+            //std::cout<<"-l flag is not set, trying with *\"_run\""<<std::endl;
+
+            /*
+                Excluding "." and ".." 
+            */
+            if( file_name.compare(".") && file_name.compare("..") && file_name.find("_run_")!=std::string::npos ) 
+            {
+                if(file_name.find(".log")!=std::string::npos)
+                {
+                    log_files->push_back(file_name);
+                }
+                if(file_name.find(".pdb")!=std::string::npos)
+                {
+                    pdb_files->push_back(file_name);
+                }
+            }
+
+        }
     }
+
+    if(pdb_files->size() == 0)
+    {
+        std::cerr<<"[DTSTATISTIC] Label not found: "<<label_name<<"."<<std::endl;
+        exit(1);
+    }
+
 }
+
 
 void open_log_files(std::vector<std::string>  *files, std::vector<leader>  *leaders)
 {
@@ -43,7 +90,7 @@ void open_log_files(std::vector<std::string>  *files, std::vector<leader>  *lead
     
     for (std::vector<std::string>::iterator it = files->begin(); it != files->end(); ++it)
     {
-        std::cout<<"VALOR: "<<*it<<std::endl;
+        //std::cout<<"VALOR: "<<*it<<std::endl;
         //file.open(*it,std::fstream::in);
         if(file.is_open())
         {

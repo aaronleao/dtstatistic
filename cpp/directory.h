@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <fstream>
+#include <string>
 
 class leader
 {
@@ -32,8 +33,8 @@ class leader
 
 
 
-DIR *open_directory(const char * path_name);
-void list_directory(DIR * dir, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files);
+DIR *check_directory(std::string directory_name);
+void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files);
 void open_log_files(std::vector<std::string>  *files,std::vector<leader>  *leaders);
 
 #endif
