@@ -20,13 +20,14 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
     struct dirent *dirent;
     std::string file_name;
 
-    while (dirent = readdir(dir))
+    while ( (dirent = readdir(dir)))
     {
         file_name=dirent->d_name;
         if(!label_name.empty() )
         {
 
-//            std::cout<<"-l flag is set"<<std::endl;
+
+            //std::cout<<"-l flag is set: "<< label_name<<std::endl;
         
             /*
                 Excluding "." and ".."  and taking exact match of label_name
@@ -36,9 +37,10 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
             std::size_t found=file_name.find(label_name.c_str(),pos,count);//Search a substring with size exact size of label
 
             if( found!=std::string::npos)
-            {   
-                std::string proximo=file_name.substr(count,5); //After found, check is the 5-following characters is "_run_"
-                if(proximo == "_run_" && file_name.compare(".") && file_name.compare("..")) 
+            {
+
+                //std::string proximo=file_name.substr(count,5); //After found, check if the 5-following characters is "_run_"
+                //if(proximo == "_run_" && file_name.compare(".") && file_name.compare("..")) 
                 {
                     if(file_name.find(".log")!=std::string::npos)
                     {

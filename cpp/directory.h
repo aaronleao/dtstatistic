@@ -1,5 +1,5 @@
-#ifndef directory
-#define directory
+#ifndef DIRECTORY_H
+#define DIRECTORY_H
 
 #include <cstdlib>
 #include <iostream>
@@ -35,6 +35,6 @@ class leader
 
 DIR *check_directory(std::string directory_name);
 void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files);
-void open_log_files(std::vector<std::string>  *files,std::vector<leader>  *leaders);
+void list_files_vector(std::vector<std::string>  *array);
 
 #endif
