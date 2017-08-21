@@ -1,41 +1,15 @@
 #include "molecule.h"
 
-atom::atom()
-{
-}
-
-int molecule::get_id()
-{
-	return id;
-}
-std::string molecule::get_log_file_name()
-{
-	return log_file_name;
-}
-std::string molecule::get_pdb_file_name()
-{
-	return pdb_file_name;
-}
-float molecule::get_total_energy()
-{
-	return total_energy;
-}
-float molecule::get_interaction_energy()
-{
-	return interaction_energy;
-}
-float molecule::get_coulomb()
-{
-	return coulomb;
-}
-float molecule::get_vdW()
-{
-	return vdW;
-}
-float molecule::get_rmsd_leader()
-{
-    return rmsd_leader;
-}
+atom::atom(){}
+int molecule::get_id(){	return id;}
+std::string molecule::get_log_file_name(){	return log_file_name;}
+std::string molecule::get_pdb_file_name(){	return pdb_file_name;}
+float molecule::get_total_energy(){	return total_energy;}
+float molecule::get_interaction_energy(){	return interaction_energy;}
+float molecule::get_coulomb(){	return coulomb;}
+float molecule::get_vdW(){	return vdW;}
+float molecule::get_rmsd_leader(){    return rmsd_leader;}
+unsigned short molecule::get_number_of_heavy_atoms(){return number_of_heavy_atoms;};
 void molecule::set_id(int var){id=var;}
 void molecule::set_log_file_name(std::string var){log_file_name=var;}
 void molecule::set_pdb_file_name(std::string var){pdb_file_name=var;}
@@ -44,7 +18,9 @@ void molecule::set_interaction_energy(float var){interaction_energy=var;}
 void molecule::set_coulomb(float var){coulomb=var;}
 void molecule::set_vdW(float var){vdW=var;}
 void molecule::set_rmsd_leader(float var){rmsd_leader=var;}
+void molecule::set_number_of_heavy_atoms(unsigned short var){number_of_heavy_atoms = var;};
 void molecule::print(){std::cout<<"ID: "<<id<<std::endl;}
+
 
 void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecules_vector)
 {
@@ -81,11 +57,6 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
     /*
     * pdb files variables
     */
-    std::string type;
-    float x_atom;
-    float y_atom;
-    float z_atom;
-
     if(log_file.is_open() && pdb_file.is_open())
     {
         log_file>>trash>>trash>>number_of_Clusters;//Geting number of clusters of the first line
@@ -116,15 +87,25 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
                 std::getline(pdb_file,trash);
                 if(trash.compare("ENDMDL")) // trash != "ENDMDL"
                 {
-                    type = trash.substr(76,77);
-                    //if(type.compare(" H  ")) // Uncomment to allow only non Hydrogen atoms.
-                    {
-                        x_atom = stof(trash.substr(30,37));
-                        y_atom = stof(trash.substr(38,45));
-                        z_atom = stof(trash.substr(46,53));                        
-                        atom *new_atom = new atom(type, x_atom, y_atom, z_atom);
-                        new_molecule->atom_list.push_back(new_atom);
-                    }
+                    atom *new_atom = new atom;
+
+                    new_atom->set_record_name(trash.substr(0,5));
+                    new_atom->set_serial_number(stoi(trash.substr(6,5)));
+                    new_atom->set_atom_name(trash.substr(12,4));
+                    new_atom->set_alternate_location_indicator(trash.substr(16,1).c_str()[0]);
+                    new_atom->set_residue_name(trash.substr(17,3));
+                    new_atom->set_chain_id(trash.substr(21,1).c_str()[0]);
+                    new_atom->set_residue_sequence(stoi(trash.substr(22,4)));
+                    new_atom->set_icode(trash.substr(26,1).c_str()[0]);
+                    new_atom->set_x(stof(trash.substr(30,7)));
+                    new_atom->set_y(stof(trash.substr(38,7)));
+                    new_atom->set_z(stof(trash.substr(46,7)));
+                    new_atom->set_occupancy(stof(trash.substr(54,6)));
+                    new_atom->set_temperature_factor(stof(trash.substr(60,6)));
+                    new_atom->set_element(trash.substr(76,2));
+                    new_atom->set_charge(trash.substr(78,2));
+
+                    new_molecule->atom_list.push_back(new_atom);
                 }
                 else
                     break;

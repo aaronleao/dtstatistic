@@ -1,6 +1,6 @@
 #include "parsing.h"
 
-void parse(int argc , char * argv[] , std::string *label_name , std::string *path_name , std::string *output_name , unsigned int *number_of_ligands, bool *analysis_by_total_energy, bool *analysis_by_internal_energy, float *rmsd_clestering, bool *print_help)
+void parse(int argc , char * argv[] , std::string *label_name , std::string *path_name , std::string *output_name , unsigned int *number_of_ligands, bool *analysis_by_total_energy, bool *analysis_by_internal_energy, float *rmsd_clestering, bool *print_help, bool *only_rmsd_calculation, std::string * rmsd_file1, std::string *rmsd_file2)
 {
 	
 	std::string aux;
@@ -84,7 +84,19 @@ void parse(int argc , char * argv[] , std::string *label_name , std::string *pat
 										i++;
 									}
 									else
-										fprint_help();
+									{
+										if(!aux.compare("-g"))
+										{
+											if(i+2 < argc)
+											{
+												*only_rmsd_calculation = true;
+												*rmsd_file1 = argv[i+1];
+												*rmsd_file2 = argv[i+2];
+											}
+										}
+										else
+											fprint_help();
+									}
 								}
 								else
 								{

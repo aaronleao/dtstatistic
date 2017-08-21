@@ -12,17 +12,23 @@
 ***********************************************************************************/
 std::string label_name="";
 std::string path_name="";
-std::string output_name="dtstatistic.log";
+std::string output_file_name="dtstatistic.log";
 int nruns=1;
 unsigned int number_of_ligands=1;
 float rmsd_clustering=2.0;
 bool analysis_by_total_energy=true;
 bool analysis_by_internal_energy=false;
 bool print_help=false;
+
 std::vector<std::string>  log_files;
 std::vector<std::string>  pdb_files;
 std::vector<molecule*> *leaders;
 std::vector<molecule*> *molecules;
+
+bool only_rmsd_calculation=false;
+std::string rmsd_file1="";
+std::string rmsd_file2="";
+
 DIR * dir=NULL;
 /**********************************************************************************/
 
@@ -33,8 +39,12 @@ int main(int argc, char * argv[])
 	/* 
 		Parsing input command
 	*/
-	parse(argc, argv, &label_name, &path_name, &output_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help);
+	parse(argc, argv, &label_name, &path_name, &output_file_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help, &only_rmsd_calculation, &rmsd_file1, &rmsd_file2);
 
+	/*
+		Checking -g flag:	Calculation of RMSD
+	*/
+	
 	
 	/* 
 		Check and open directory in -d flag
@@ -47,14 +57,14 @@ int main(int argc, char * argv[])
 	/*
 		Select available files set in -l flag or all .log files in the directory opened
 	*/
-	list_directory(dir,label_name, &log_files, &pdb_files);
+	list_directory(dir,label_name, &log_files, &pdb_files, &output_file_name);
 	nruns=pdb_files.size();
 
 
 	/*
 		Change to the path set in -d flag
 	*/
-	chdir(path_name.c_str());					 
+	if(!chdir(path_name.c_str()))
 	
 
 	/*
@@ -75,7 +85,7 @@ int main(int argc, char * argv[])
 	/*
 	*	Logging leader in output file
 	*/
-	write_output_clustering(*leaders, output_name, number_of_ligands);
+	write_output_clustering(*leaders, output_file_name, number_of_ligands);
 
 	// for (std::vector<molecule*>::iterator it = molecules->begin(); it !=  molecules->end(); it++)
 	// {

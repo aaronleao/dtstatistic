@@ -15,7 +15,7 @@ DIR * check_directory(std::string path_name)
 }
 
 
-void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files)
+void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files,std::string  *output_file_name)
 {
     struct dirent *dirent;
     std::string file_name;
@@ -52,6 +52,10 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
                     }
 
                 }
+            }
+            if(!output_file_name->compare("dtstatistic.log"))
+            {
+                *output_file_name = "dts_"+label_name+".log";
             }
         }
         else
@@ -128,25 +132,26 @@ void open_log_files(std::vector<std::string>  *files, std::vector<leader>  *lead
                 leaders->push_back(lider1);
             }
         }
-        for (std::vector<leader >::iterator it = leaders->begin(); it != leaders->end(); ++it)
-        {
+        //for (std::vector<leader >::iterator it = leaders->begin(); it != leaders->end(); ++it)
+        //{
             //std::cout<<"total_Energy: "<<it->get_total_energy()<<std::endl;
-        }
+        //}
         file.close();
 
     }
 
+}
 
 
-// if (myReadFile.is_open())
-// {
-//     while (!myReadFile.eof())
-//     {
-//         myReadFile >> output;
-//         cout<<output;
-//     }
-// }
-
-
-
+bool check_file(std::string file_name)
+{
+    if (FILE *file = fopen(file_name.c_str(), "r"))
+    {
+        fclose(file);
+        return true;
+    }
+    else
+    {
+        return false;
+    }   
 }
