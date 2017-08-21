@@ -619,22 +619,14 @@ def main():
     
     p = optparse.OptionParser(strinfo)
     
-    p.add_option("-l",  type="string", help="set label name", metavar="name")
-    
-    p.add_option("-t", help="analysis by total energy", action="store_true", default=True)
-    
-    p.add_option("-i", help="analysis by interaction energy", action="store_false", default=True)
-    
-    p.add_option("-r",  type="string", help="reference file for rmsd", metavar="name")
-    
-    p.add_option("-c", type="float", help="cluster parameter (2.0)", metavar="number", default = 2.0)
-
-    p.add_option("-o",  type="string", help="output file label (out)", metavar="name", default="out")
-    
-    p.add_option("-n",  type="int", help="number of ligands to log (10)", metavar="number", default=10)
-    
-    p.add_option("-g", type="string",nargs=2 ,help="calc rmsd for two ligands", metavar="file1 file2")
-    
+    p.add_option("-l",  type="string", help="set label name", metavar="name")                               # OK
+    p.add_option("-t", help="analysis by total energy", action="store_true", default=True)                  # OK
+    p.add_option("-i", help="analysis by interaction energy", action="store_false", default=True)           # OK
+    p.add_option("-r",  type="string", help="reference file for rmsd", metavar="name")                      # OK
+    p.add_option("-c", type="float", help="cluster parameter (2.0)", metavar="number", default = 2.0)       # OK
+    p.add_option("-o",  type="string", help="output file label (out)", metavar="name", default="out")       # OK
+    p.add_option("-n",  type="int", help="number of ligands to log (10)", metavar="number", default=10)     # OK
+    p.add_option("-g", type="string",nargs=2 ,help="calc rmsd for two ligands", metavar="file1 file2")      # OK
     p.add_option("-s", help="sucess rate of runs", type="float" , metavar="number")
 
         

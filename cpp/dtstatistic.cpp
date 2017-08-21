@@ -39,12 +39,15 @@ int main(int argc, char * argv[])
 	/* 
 		Parsing input command
 	*/
-	parse(argc, argv, &label_name, &path_name, &output_file_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help, &only_rmsd_calculation, &rmsd_file1, &rmsd_file2);
+	parse1(argc, argv, &label_name, &path_name, &output_file_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help, &only_rmsd_calculation, &rmsd_file1, &rmsd_file2);
 
 	/*
 		Checking -g flag:	Calculation of RMSD
 	*/
-	
+	if(only_rmsd_calculation)	
+	{
+	rmsd_between_files( rmsd_file1, rmsd_file2 );
+	}
 	
 	/* 
 		Check and open directory in -d flag

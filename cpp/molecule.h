@@ -4,14 +4,14 @@
 
 // #include <openbabel/obconversion.h>
 // #include <openbabel/mol.h>
+//#include <dirent.h>
+//#include <unistd.h>
 #include <iostream>
 #include <cstring>
 #include <vector>
 #include <iomanip>
-//#include <dirent.h>
-//#include <unistd.h>
 #include <fstream>
-
+#include "directory.h"
 
 class atom
 {
@@ -87,10 +87,22 @@ class molecule
 
 	public:
 		std::vector <class atom*> atom_list;
-		molecule(){number_of_heavy_atoms = 0;};
-		molecule(int var_id,std::string var_log_file_name,std::string var_pdb_file_name,float var_total_energy,float var_internal_energy,float var_coulomb,float var_vdW):id(var_id),log_file_name(var_log_file_name),pdb_file_name(var_pdb_file_name),total_energy(var_total_energy),internal_energy(var_internal_energy),coulomb(var_coulomb),vdW(var_vdW){number_of_heavy_atoms = 0;};
+		molecule();
+		molecule(int var_id,std::string var_log_file_name,\
+					std::string var_pdb_file_name,\
+					float var_total_energy,\
+					float var_internal_energy,\
+					float var_coulomb,\
+					float var_vdW):\
+					id(var_id),\
+					log_file_name(var_log_file_name),\
+					pdb_file_name(var_pdb_file_name),\
+					total_energy(var_total_energy),\
+					internal_energy(var_internal_energy),\
+					coulomb(var_coulomb),\
+					vdW(var_vdW)\
+					{number_of_heavy_atoms = 0;};
 
-		//int get_id(){return id;};
 		int get_id();
 		std::string get_log_file_name();
 		std::string get_pdb_file_name();
@@ -120,4 +132,5 @@ std::vector<molecule*> *create_molecule_vector( std::vector<std::string> log_fil
 
 int mol2_converter(std::vector<std::string>  *pdb_files);
 void mostrar(atom *var);
+molecule * load_atoms(std::string file_name);
 #endif

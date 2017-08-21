@@ -1,4 +1,4 @@
-#include <cmath>
+
 #include "rmsd.h"
 
 float get_molecules_RMSD(molecule * molecule1, molecule * molecule2)
@@ -24,4 +24,21 @@ float get_molecules_RMSD(molecule * molecule1, molecule * molecule2)
 
 
 	return sqrt((aux_x + aux_y + aux_z)/aux1);
+}
+
+float rmsd_between_files( std::string file_name1, std::string file_name2 )
+{
+	molecule *new_molecule1 = load_atoms(file_name1);
+	molecule *new_molecule2 = load_atoms(file_name2);
+
+	float rmsd=0;
+
+	if(new_molecule1 && new_molecule2) // If molecules are not NULL
+	{
+		rmsd = get_molecules_RMSD(new_molecule1,new_molecule2);
+		std::cerr << "[DTSTATISTIC] RMSD: " << rmsd;
+		exit(2);
+	}
+	exit(0);
+	return rmsd;
 }

@@ -145,13 +145,14 @@ void open_log_files(std::vector<std::string>  *files, std::vector<leader>  *lead
 
 bool check_file(std::string file_name)
 {
-    if (FILE *file = fopen(file_name.c_str(), "r"))
+    std::ifstream file;
+    file.open(file_name);
+    if(file.is_open())
     {
-        fclose(file);
+        file.close();
         return true;
     }
-    else
-    {
-        return false;
-    }   
+    std::cerr << "[DTSTATISTIC] File not found: " << file_name;
+    exit(0);
+    return false;
 }
