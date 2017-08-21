@@ -1,7 +1,7 @@
 CC = g++
 #INCLUDE = -I/usr/include/openbabel-2.0/
 INCLUDE =
-CFLAGS = -c -g -Wall
+CFLAGS = -std=c++11 -c -g -Wall -O3
 #LDFLAGS = -lopenbabel
 LDFLAGS =
 TARGET = dtstatistic
