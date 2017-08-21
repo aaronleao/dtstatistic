@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <iomanip>
 //#include <dirent.h>
 //#include <unistd.h>
 #include <fstream>
@@ -16,21 +17,21 @@ class atom
 {
 	private:
 		//Atom properties according to the PDB Format v33 pg 186
-		std::string record_name;				//1-6
-		int serial_number;						//7-11
-		std::string atom_name;					//13-16
-		char alternate_location_indicator;		//17
-		std::string residue_name;				//18-20
-		char chain_id;							//22
-		int residue_sequence;					//23-26
-		char icode;								//27
-		float x;								//31-38
-		float y;								//39-46
-		float z;								//47-54
-		float occupancy;						//55-60
-		float temperature_factor;				//61-66
-		std::string element;					//77-78
-		std::string charge;						//79-80
+		std::string record_name;					//1-6
+		int serial_number;							//7-11
+		std::string atom_name;						//13-16
+		std::string alternate_location_indicator;	//17        Not used in Dockthor
+		std::string residue_name;					//18-20
+		char chain_id;								//22
+		int residue_sequence;						//23-26
+		char icode;									//27		Not used in Dockthor
+		float x;									//31-38
+		float y;									//39-46
+		float z;									//47-54
+		float occupancy;							//55-60
+		float temperature_factor;					//61-66
+		std::string element;						//77-78
+		std::string charge;							//79-80
 
 
 	public:
@@ -43,8 +44,8 @@ class atom
 		void set_serial_number(int var){serial_number = var;};
 		std::string get_atom_name(){return atom_name;};
 		void set_atom_name(std::string var){atom_name = var;};
-		char get_alternate_location_indicator(){return alternate_location_indicator;};
-		void set_alternate_location_indicator(char var){alternate_location_indicator = var;};
+		std::string get_alternate_location_indicator(){return alternate_location_indicator;};
+		void set_alternate_location_indicator(std::string var){alternate_location_indicator = var;};
 		std::string get_residue_name(){return residue_name;};
 		void set_residue_name(std::string var){residue_name = var;};
 		char get_chain_id(){return chain_id;};
@@ -77,6 +78,7 @@ class molecule
 		std::string log_file_name;
 		std::string pdb_file_name;
 		float total_energy;
+		float internal_energy;
 		float interaction_energy;
 		float coulomb;
 		float vdW;
@@ -85,8 +87,8 @@ class molecule
 
 	public:
 		std::vector <class atom*> atom_list;
-		molecule(){};
-		molecule(int var_id,std::string var_log_file_name,std::string var_pdb_file_name,float var_total_energy,float var_interaction_energy,float var_coulomb,float var_vdW):id(var_id),log_file_name(var_log_file_name),pdb_file_name(var_pdb_file_name),total_energy(var_total_energy),interaction_energy(var_interaction_energy),coulomb(var_coulomb),vdW(var_vdW){};
+		molecule(){number_of_heavy_atoms = 0;};
+		molecule(int var_id,std::string var_log_file_name,std::string var_pdb_file_name,float var_total_energy,float var_internal_energy,float var_coulomb,float var_vdW):id(var_id),log_file_name(var_log_file_name),pdb_file_name(var_pdb_file_name),total_energy(var_total_energy),internal_energy(var_internal_energy),coulomb(var_coulomb),vdW(var_vdW){number_of_heavy_atoms = 0;};
 
 		//int get_id(){return id;};
 		int get_id();
@@ -94,6 +96,7 @@ class molecule
 		std::string get_pdb_file_name();
 		float get_total_energy();
 		float get_interaction_energy();
+		float get_internal_energy();
 		float get_coulomb();
 		float get_vdW();
 		float get_rmsd_leader();
@@ -103,12 +106,12 @@ class molecule
 		void set_log_file_name(std::string var);
 		void set_pdb_file_name(std::string var);
 		void set_total_energy(float var);
+		void set_internal_energy(float var);
 		void set_interaction_energy(float var);
 		void set_coulomb(float var);
 		void set_vdW(float var);
 		void set_rmsd_leader(float var);
-		void set_number_of_heavy_atoms(unsigned short var);
-		void print();
+		void set_number_of_heavy_atoms(){number_of_heavy_atoms++;};
 
 };
 
@@ -116,5 +119,5 @@ void read_molecule(std::string  file_name, std::vector<molecule *> *molecules_ve
 std::vector<molecule*> *create_molecule_vector( std::vector<std::string> log_files);
 
 int mol2_converter(std::vector<std::string>  *pdb_files);
-
+void mostrar(atom *var);
 #endif

@@ -5,6 +5,7 @@ int molecule::get_id(){	return id;}
 std::string molecule::get_log_file_name(){	return log_file_name;}
 std::string molecule::get_pdb_file_name(){	return pdb_file_name;}
 float molecule::get_total_energy(){	return total_energy;}
+float molecule::get_internal_energy(){   return internal_energy;}
 float molecule::get_interaction_energy(){	return interaction_energy;}
 float molecule::get_coulomb(){	return coulomb;}
 float molecule::get_vdW(){	return vdW;}
@@ -14,12 +15,12 @@ void molecule::set_id(int var){id=var;}
 void molecule::set_log_file_name(std::string var){log_file_name=var;}
 void molecule::set_pdb_file_name(std::string var){pdb_file_name=var;}
 void molecule::set_total_energy(float var){total_energy=var;}
+void molecule::set_internal_energy(float var){internal_energy=var;}
 void molecule::set_interaction_energy(float var){interaction_energy=var;}
 void molecule::set_coulomb(float var){coulomb=var;}
 void molecule::set_vdW(float var){vdW=var;}
 void molecule::set_rmsd_leader(float var){rmsd_leader=var;}
-void molecule::set_number_of_heavy_atoms(unsigned short var){number_of_heavy_atoms = var;};
-void molecule::print(){std::cout<<"ID: "<<id<<std::endl;}
+//void molecule::set_number_of_heavy_atoms(unsigned short var){number_of_heavy_atoms = var;};
 
 
 void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecules_vector)
@@ -42,6 +43,7 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
 
 
     std::string trash;// Garbage string
+  
     /*
     * log file variables
     */
@@ -54,6 +56,7 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
     float rmsd;
     int number_of_Clusters;
     int seed;
+
     /*
     * pdb files variables
     */
@@ -79,7 +82,7 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
             int aux_id=0;
 
             molecule * new_molecule= new molecule(id,log_file_name,pdb_file_name,total_Energy,internal_Energy,coulomb,vdw);
-
+            new_molecule->set_interaction_energy(coulomb + vdw);
             pdb_file >> trash >> aux_id;
             std::getline(pdb_file,trash);
             while( trash.compare("ENDMDL") )
@@ -89,14 +92,19 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
                 {
                     atom *new_atom = new atom;
 
-                    new_atom->set_record_name(trash.substr(0,5));
+                    new_atom->set_record_name(trash.substr(0,6));
                     new_atom->set_serial_number(stoi(trash.substr(6,5)));
-                    new_atom->set_atom_name(trash.substr(12,4));
-                    new_atom->set_alternate_location_indicator(trash.substr(16,1).c_str()[0]);
+                    new_atom->set_atom_name(trash.substr(11,5));
+                    if(new_atom->get_atom_name().compare("    H")) // If currenty atom is not H.
+                        new_molecule->set_number_of_heavy_atoms(); // Increase the number of heavy atoms.
+
+                    /*Not used in Dockthor*/
+                    //new_atom->set_alternate_location_indicator(trash.substr(16,2));
                     new_atom->set_residue_name(trash.substr(17,3));
                     new_atom->set_chain_id(trash.substr(21,1).c_str()[0]);
                     new_atom->set_residue_sequence(stoi(trash.substr(22,4)));
-                    new_atom->set_icode(trash.substr(26,1).c_str()[0]);
+                    /*Not used in Dockthor*/
+                    //new_atom->set_icode(trash.substr(26,1).c_str()[0]);
                     new_atom->set_x(stof(trash.substr(30,7)));
                     new_atom->set_y(stof(trash.substr(38,7)));
                     new_atom->set_z(stof(trash.substr(46,7)));
@@ -106,6 +114,8 @@ void read_molecule(std::string  log_file_name , std::vector <molecule*> *molecul
                     new_atom->set_charge(trash.substr(78,2));
 
                     new_molecule->atom_list.push_back(new_atom);
+                    //mostrar(new_atom);
+
                 }
                 else
                     break;
@@ -129,3 +139,38 @@ std::vector<molecule*> *create_molecule_vector( std::vector<std::string> log_fil
 
 
 
+void mostrar(atom *new_atom)
+{   std::cout<<\
+    std::setw(6)<<\
+    new_atom->get_record_name() <<\
+    std::setw(5)<<\
+    new_atom->get_serial_number()<<\
+    std::setw(5)<<\
+    new_atom->get_atom_name() <<\
+    /*  Not used in Dockthor */
+    /*std::setw(2)<<\*/
+    /*new_atom->get_alternate_location_indicator()<<\*/
+    std::setw(4)<<\
+    new_atom->get_residue_name()<<\
+    std::setw(2)<<\
+    new_atom->get_chain_id()<<\
+    std::setw(4)<<\
+    new_atom->get_residue_sequence()<<\
+    /*  Not used in Dockthor */
+    /*std::setw(1)<<\*/
+    /*new_atom->get_icode()<<"   "<<\*/
+    std::setw(12)<<std::setprecision(3)<<\
+    new_atom->get_x()<<\
+    std::setw(8)<<std::setprecision(3)<<std::fixed<<\
+    new_atom->get_y()<<\
+    std::setw(8)<<std::setprecision(3)<<std::fixed<<\
+    new_atom->get_z()<<\
+    std::setw(6)<<std::setprecision(2)<<std::fixed<<\
+    new_atom->get_occupancy()<<\
+    std::setw(6)<<std::setprecision(2)<<std::fixed<<\
+    new_atom->get_temperature_factor()<<\
+    std::setw(12)<<\
+    new_atom->get_element()<<\
+    std::setw(2)<<\
+    new_atom->get_charge()<<std::endl;
+}
