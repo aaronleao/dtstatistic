@@ -14,10 +14,18 @@ float get_molecules_RMSD(molecule * molecule1, molecule * molecule2)
 	float aux_x=0,aux_y=0,aux_z=0;
 	for(int i=0 ; i< aux1 ; i++)
 	{
-		aux_x += (molecule1->atom_list[i]->get_x() - molecule2->atom_list[i]->get_x() ) * (molecule1->atom_list[i]->get_x() - molecule2->atom_list[i]->get_x() );
-		aux_y += (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() ) * (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() );
-		aux_z += (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() ) * (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() );
+		if(molecule1->atom_list[i]->get_atom_name().compare("    H") && molecule2->atom_list[i]->get_atom_name().compare("    H") )
+		{
+			aux_x += (molecule1->atom_list[i]->get_x() - molecule2->atom_list[i]->get_x() ) * (molecule1->atom_list[i]->get_x() - molecule2->atom_list[i]->get_x() );
+			aux_y += (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() ) * (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() );
+			aux_z += (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() ) * (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() );
+		}
+		else
+		{
+			std::cerr << "[DTSTATISTIC] RMSD: RMSD calculation between H atoms, " << molecule1->atom_list[i]->get_atom_name() << " - " << molecule2->atom_list[i]->get_atom_name() << std::endl;
+		}
 	}
-	//std::cout<< "Cheguei aqui";
+
+
 	return sqrt((aux_x + aux_y + aux_z)/aux1);
 }
