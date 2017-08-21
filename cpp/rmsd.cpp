@@ -20,10 +20,6 @@ float get_molecules_RMSD(molecule * molecule1, molecule * molecule2)
 			aux_y += (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() ) * (molecule1->atom_list[i]->get_y() - molecule2->atom_list[i]->get_y() );
 			aux_z += (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() ) * (molecule1->atom_list[i]->get_z() - molecule2->atom_list[i]->get_z() );
 		}
-		else
-		{
-			std::cerr << "[DTSTATISTIC] RMSD: RMSD calculation between H atoms, " << molecule1->atom_list[i]->get_atom_name() << " - " << molecule2->atom_list[i]->get_atom_name() << std::endl;
-		}
 	}
 
 
