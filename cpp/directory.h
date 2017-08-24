@@ -37,4 +37,5 @@ DIR *check_directory(std::string directory_name);
 void list_directory(DIR * dir, std::string label_name, std::vector<std::string>  *log_files, std::vector<std::string>  *pdb_files, std::string *output_file_name);
 void list_files_vector(std::vector<std::string>  *array);
 bool check_file(std::string file_name);
+std::vector<std::string>* get_file_list(DIR * dir, std::string label_name, std::string extension);
 #endif

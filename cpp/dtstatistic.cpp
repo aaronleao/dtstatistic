@@ -11,7 +11,7 @@
 									GLOBAL VARIABLES
 ***********************************************************************************/
 std::string label_name="";
-std::string path_name="";
+std::string directory_name="";
 std::string output_file_name="dtstatistic.log";
 int nruns=1;
 unsigned int number_of_ligands=1;
@@ -39,8 +39,8 @@ int main(int argc, char * argv[])
 	/* 
 		Parsing input command
 	*/
-	parse1(argc, argv, &label_name, &path_name, &output_file_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help, &only_rmsd_calculation, &rmsd_file1, &rmsd_file2);
-
+	parse(argc, argv, &label_name, &directory_name, &output_file_name, &number_of_ligands, &analysis_by_total_energy, &analysis_by_internal_energy, &rmsd_clustering,&print_help, &only_rmsd_calculation, &rmsd_file1, &rmsd_file2);
+	check_flags(label_name,&directory_name, &log_files, &pdb_files);
 	/*
 		Checking -g flag:	Calculation of RMSD
 	*/
@@ -52,9 +52,9 @@ int main(int argc, char * argv[])
 	/* 
 		Check and open directory in -d flag
 	*/
-	if(path_name.empty()) // If is path_name is empty opens "." directory
-		path_name=".";
-	dir=check_directory(path_name.c_str());
+	if(directory_name.empty()) // If is path_name is empty opens "." directory
+		directory_name=".";
+	dir=check_directory(directory_name.c_str());
 	
 	
 	/*
@@ -67,7 +67,10 @@ int main(int argc, char * argv[])
 	/*
 		Change to the path set in -d flag
 	*/
-	if(!chdir(path_name.c_str()))
+	if( chdir(directory_name.c_str()) )
+	{	std::cerr << "[DTSTATISTIC] Could not open directory " << directory_name << std::endl;
+		exit(1);
+	}
 	
 
 	/*

@@ -46,3 +46,4 @@ $(LOG).o: $(LOG).cpp
 
 clean:
 	$(RM) $(TARGET) $(OBJS)	
+

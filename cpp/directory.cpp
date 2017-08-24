@@ -23,18 +23,14 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
     while ( (dirent = readdir(dir)))
     {
         file_name=dirent->d_name;
-        if(!label_name.empty() )
+        if(!label_name.empty() ) // -l flag is set.
         {
-
-
-            //std::cout<<"-l flag is set: "<< label_name<<std::endl;
-        
             /*
                 Excluding "." and ".."  and taking exact match of label_name
             */
-            std::size_t count=label_name.size();//label size
+            std::size_t count = label_name.size();//label size
             std::size_t pos=0;                  //Search in the begining of the string
-            std::size_t found=file_name.find(label_name.c_str(),pos,count);//Search a substring with size exact size of label
+            std::size_t found = file_name.find(label_name.c_str(),pos,count);//Search a substring with size exact size of label
 
             if( found!=std::string::npos)
             {
@@ -60,7 +56,6 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
         }
         else
         {
-            //std::cout<<"-l flag is not set, trying with *\"_run\""<<std::endl;
 
             /*
                 Excluding "." and ".." 
@@ -82,7 +77,7 @@ void list_directory(DIR * dir, std::string label_name, std::vector<std::string> 
 
     if(pdb_files->size() == 0)
     {
-        std::cerr<<"[DTSTATISTIC] Label not found: "<<label_name<<"."<<std::endl;
+        std::cerr<<"[DTSTATISTIC] Label not found: "<<label_name<<std::endl;
         exit(1);
     }
 
@@ -155,4 +150,75 @@ bool check_file(std::string file_name)
     std::cerr << "[DTSTATISTIC] File not found: " << file_name;
     exit(0);
     return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+std::vector<std::string>* get_file_list(DIR * dir, std::string label_name, std::string extension)
+{
+    struct dirent *dirent;
+    std::string file_name;
+    int size = label_name.size();
+
+    std::vector<std::string>* return_vector = new std::vector<std::string>;
+
+    while ( (dirent = readdir(dir)))
+    {
+        file_name=dirent->d_name;
+
+        
+        if( file_name.find(label_name.c_str(),0,size) != std::string::npos && file_name.find(extension)!=std::string::npos )
+        {
+            return_vector->push_back(file_name);
+            std::cout << "ARQUIVO: "  << file_name << std::endl;
+        }
+
+    }
+
+    return return_vector;
+
 }
